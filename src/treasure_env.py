@@ -17,8 +17,8 @@ class TreasureEnv():
 
         self.action_space = 4
         self.action_to_direction = {
-            0: np.array([-1, 0]),  # Up
-            1: np.array([1, 0]), # Down
+            0: np.array([-1, 0]), # Up
+            1: np.array([1, 0]),  # Down
             2: np.array([0, -1]), # Left
             3: np.array([0, 1]),  # Right
         }
