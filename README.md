@@ -14,5 +14,6 @@ src/config.py
 
 # Run Treasure Hunt RL Agent
 ```bash
+mkdir experiments
 python3 src/main.py
 ```
