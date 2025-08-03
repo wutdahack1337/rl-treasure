@@ -2,30 +2,27 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 def check_response(env, obs, reward):
-    print(f"agent:  {obs['agent']}")
-    print(f"target: {obs['target']}")
     print(f"reward: {reward}")
     env.render()
     print()
 
 def check_q_values(env, agent):
-    print("\n====== Q-values ======")
+    print("\n=== Q-values ===")
     for obs in sorted(agent.q_values):
-        if np.max(agent.q_values[obs]) > 0:
-            for i in range(env.size):
-                for j in range(env.size):
-                    if (i, j) == (obs[0], obs[1]):
-                        print("[O]", end='')
-                    elif (i, j) == (obs[2], obs[3]):
-                        print("[X]", end='')
-                    else:
-                        print("[ ]", end='')
-                print()
+        for i in range(env.size):
+            for j in range(env.size):
+                if (i, j) == (obs[0], obs[1]):
+                    print("[O]", end='')
+                elif (i, j) == (obs[2], obs[3]):
+                    print("[X]", end='')
+                else:
+                    print("[ ]", end='')
+            print()
 
-            print(f"Up: {agent.q_values[obs][0]}")
-            print(f"Down: {agent.q_values[obs][1]}")
-            print(f"Left: {agent.q_values[obs][2]}")
-            print(f"Right: {agent.q_values[obs][3]}")
+        print(f"Up: {agent.q_values[obs][0]}")
+        print(f"Down: {agent.q_values[obs][1]}")
+        print(f"Left: {agent.q_values[obs][2]}")
+        print(f"Right: {agent.q_values[obs][3]}")
         print()
 
 def get_moving_average(arr, window, convolution_mode):
