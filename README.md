@@ -9,7 +9,7 @@ pip install -r requirements.txt
 
 # Hyperparameters
 ```bash
-config.py
+src/config.py
 ```
 
 # Run Treasure Hunt RL Agent
