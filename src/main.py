@@ -16,7 +16,9 @@ def main():
     utils.check_q_values(env, agent)
     utils.plot_training_results(step_cnt_queue, config.size, config.train_episodes)
 
-    test_agent(env, agent, config.test_episodes)
+    test = input("Do you want to test the agent? (y/n): ").strip().lower()
+    if test == "y":
+        test_agent(env, agent, config.test_episodes)
 
 def train_agent(env, agent, n_episodes):
     step_cnt_queue = []

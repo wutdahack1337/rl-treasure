@@ -49,7 +49,7 @@ class TreasureEnv():
         info = self.__get_info()
         
         terminated = np.array_equal(self.agent_location, self.__target_location)
-        reward = 1 if terminated else 0
+        reward = 100 if terminated else -1
 
         return obs, reward, terminated, info
     

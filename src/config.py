@@ -5,16 +5,16 @@ class TrainingConfig:
     """
     Config for treasure hunting training
     """
-    size:       int   = 3
+    size:       int   = 6
     seed:       int   = 1337
 
-    train_episodes:      int   = 33333
+    train_episodes:  int   = 3333
     learning_rate:   float = 0.01
     discount_factor: float = 0.95
 
     epsilon:         float = 0.1
 
-    test_episodes: int = 6
+    test_episodes: int = 3
 
     def __post_init__(self):
         if self.size < 2:

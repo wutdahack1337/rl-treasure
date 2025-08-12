@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
+import time
 
 def check_response(env, obs, reward):
     print(f"reward: {reward}")
@@ -32,9 +33,8 @@ def get_moving_average(arr, window, convolution_mode):
     return np.convolve(np.array(arr).flatten(), np.ones(window), mode=convolution_mode)/window
 
 def plot_training_results(arr, size, n_episodes, rolling_length = 500):
-    if len(arr) < rolling_length:
-        print("array length must be >= rolling_length")
-        return
+    if len(arr) <= rolling_length:
+        raise ValueError("array length must be > rolling_length")
 
     step_moving_average = get_moving_average(arr, rolling_length, "valid")
 
@@ -44,4 +44,4 @@ def plot_training_results(arr, size, n_episodes, rolling_length = 500):
     plt.ylabel("Average Episode Step")
 
     plt.plot(range(len(step_moving_average)), step_moving_average)
-    plt.savefig(f"experiments/training_results_{size}_{n_episodes}.png")
+    plt.savefig(f"experiments/training_results_{size}_{n_episodes}_{time.strftime("%Y%m%d_%H%M%S")}.png")
