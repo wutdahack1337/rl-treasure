@@ -10,12 +10,16 @@ def check_response(env, obs, reward):
 def check_q_values(env, agent):
     print("\n=== Q-values ===")
     for obs in sorted(agent.q_values):
+        if env._check_trap_location([obs[0], obs[1]]):
+            continue
         for i in range(env.size):
             for j in range(env.size):
                 if (i, j) == (obs[0], obs[1]):
                     print("[O]", end='')
                 elif (i, j) == (obs[2], obs[3]):
                     print("[X]", end='')
+                elif env._check_trap_location([i, j]):
+                    print('[!]', end='')
                 else:
                     print("[ ]", end='')
             print()

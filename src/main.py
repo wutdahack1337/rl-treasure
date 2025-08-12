@@ -25,15 +25,17 @@ def train_agent(env, agent, n_episodes):
     for episode in tqdm(range(n_episodes), desc="Training"):
         obs, info = env.reset()
         step_cnt = 0
-        terminated = False
 
-        while not terminated:
+        done = False
+        while not done:
             action = agent.get_action(obs, verbose=0)
-            next_obs, reward, terminated, info = env.step(action)
+            next_obs, reward, terminated, truncated, info = env.step(action)
             step_cnt += 1
 
             agent.learn(obs, action, reward, terminated, next_obs)
             obs = next_obs
+
+            done = terminated or truncated
 
         step_cnt_queue.append(step_cnt)
 
@@ -48,12 +50,13 @@ def test_agent(env, agent, test_episodes):
         print(f"=== Test episode {episode + 1} ===")
         utils.check_response(env, obs, 0)
 
-        terminated = False
-        while not terminated:
+        done = False
+        while not done:
             action = agent.get_action(obs, verbose=0)
-            obs, reward, terminated, info = env.step(action)
+            obs, reward, terminated, truncated, info = env.step(action)
             utils.check_response(env, obs, reward)
 
+            done = terminated or truncated
     agent.epsilon = original_epsilon
 
 if __name__ == "__main__":

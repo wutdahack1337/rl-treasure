@@ -11,9 +11,17 @@ class TreasureEnv():
             random.seed(seed)
 
         self.size = size
+        self.remain_step = -1
+        self.num_traps = randint(1, size*size//2)
 
         self.__target_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
         self.agent_location  = np.array([-1, -1])
+        self.traps = []
+        for i in range(self.num_traps):
+            trap_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
+            while np.array_equal(trap_location, self.__target_location):
+                trap_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
+            self.traps.append(trap_location)
 
         self.action_space = 4
         self.action_to_direction = {
@@ -28,7 +36,12 @@ class TreasureEnv():
         Returns
             observation (agent and target location) and distance info
         """
-        self.agent_location  = np.array([randint(0, self.size-1), randint(0, self.size-1)])
+
+        self.remain_step = self.size*self.size
+
+        self.agent_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
+        while self._check_trap_location(self.agent_location):
+            self.agent_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
         
         while np.array_equal(self.agent_location, self.__target_location):
             self.agent_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
@@ -43,6 +56,8 @@ class TreasureEnv():
         Returns
             obs, reward, terminated, info
         """
+        self.remain_step -= 1
+
         self.agent_location += self.action_to_direction[action]
 
         obs = self.__get_obs()
@@ -51,7 +66,14 @@ class TreasureEnv():
         terminated = np.array_equal(self.agent_location, self.__target_location)
         reward = 100 if terminated else -1
 
-        return obs, reward, terminated, info
+        for i in range(self.num_traps):
+            if np.array_equal(self.agent_location, self.traps[i]):
+                terminated = True
+                reward = -1000
+
+        truncated = (self.remain_step == 0)
+
+        return obs, reward, terminated, truncated, info
     
     def render(self):
         for i in range(self.size):
@@ -60,6 +82,8 @@ class TreasureEnv():
                     print('[O]', end='')
                 elif np.array_equal([i, j], self.__target_location):
                     print('[X]', end='')
+                elif self._check_trap_location([i, j]):
+                    print('[!]', end='')
                 else:
                     print('[ ]', end='')
             print()
@@ -77,6 +101,10 @@ class TreasureEnv():
         """
         return abs(self.agent_location[0] - self.__target_location[0]) + abs(self.agent_location[1] - self.__target_location[1])
 
-
+    def _check_trap_location(self, location):
+        for i in range(self.num_traps):
+            if np.array_equal(location, self.traps[i]):
+                return True
+        return False
 
 

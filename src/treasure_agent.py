@@ -18,11 +18,12 @@ class TreasureAgent:
     def get_action(self, obs, verbose = 1):
         obs = tuple(np.concatenate(list(obs.values())))
 
-        if random.random() < self.epsilon or not np.max(self.q_values[obs]) > 0:
+        if random.random() < self.epsilon:
             if verbose == 1:
                 print("random action")
 
             action = randint(0, self.env.action_space-1)
+            # print(self.env.agent_location, self.env.action_to_direction[action])
             while not self.__check_inside(self.env.agent_location + self.env.action_to_direction[action]):
                 action = randint(0, self.env.action_space-1)
             return action
@@ -33,7 +34,7 @@ class TreasureAgent:
             row = self.q_values[obs].copy()
             for action in range(self.env.action_space):
                 if not self.__check_inside(self.env.agent_location + self.env.action_to_direction[action]):
-                    row[action] = -1
+                    row[action] = -1000
             return int(np.argmax(row)) 
     
     def learn(self, obs, action, reward, terminated, next_obs):
