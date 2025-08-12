@@ -13,6 +13,10 @@ mkdir experiments
 python3 src/main.py
 ```
 ## Preview
+```O``` is agent  
+```X``` is treasure  
+```!``` is trap  
+
 ```
 reward: -1
 [ ][ ][ ][ ][ ][ ]
