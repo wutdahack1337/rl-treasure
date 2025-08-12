@@ -12,8 +12,7 @@ src/config.py
 mkdir experiments
 python3 src/main.py
 ```
-
-# Preview
+## Preview
 ```
 reward: -1
 [ ][ ][ ][ ][ ][ ]
