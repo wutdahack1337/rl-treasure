@@ -13,12 +13,12 @@ class TreasureEnv():
 
         self.__target_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
         self.agent_location  = np.array([-1, -1])
+
         self.traps = [[0 for _ in range(self.size)] for _ in range(self.size)]
-        for i in range(self.num_traps):
-            trap_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
-            while np.array_equal(trap_location, self.__target_location):
-                trap_location = np.array([randint(0, self.size-1), randint(0, self.size-1)])
-            self.traps[trap_location[0]][trap_location[1]] = 1
+        all_trap_positions = [(i, j) for i in range(self.size) for j in range(self.size) if not (i == self.__target_location[0] and j == self.__target_location[1])]
+        random.shuffle(all_trap_positions)
+        for trap_positions in all_trap_positions[:self.num_traps]:
+            self.traps[trap_positions[0]][trap_positions[1]] = 1
 
         self.action_space = 4
         self.action_to_direction = {

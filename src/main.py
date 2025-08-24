@@ -25,6 +25,8 @@ def train_agent(env, agent, n_episodes, debug):
     for episode in tqdm(range(n_episodes), desc="Training"):
         obs, info = env.reset()
         step_cnt = 0
+        if debug:
+                utils.check_response(env, obs, 0)
 
         done = False
         while not done:
@@ -32,7 +34,7 @@ def train_agent(env, agent, n_episodes, debug):
             next_obs, reward, terminated, truncated, info = env.step(action)
             step_cnt += 1
 
-            if debug == True:
+            if debug:
                 utils.check_response(env, obs, reward)
 
             agent.learn(obs, action, reward, terminated, next_obs)
@@ -41,6 +43,9 @@ def train_agent(env, agent, n_episodes, debug):
             done = terminated or truncated
 
         step_cnt_queue.append(step_cnt)
+        
+        if debug:
+            print("===")
 
     return step_cnt_queue
     
