@@ -5,7 +5,8 @@ from collections import defaultdict
 
 class TreasureAgent:
     def __init__(self, env, learning_rate, epsilon, discount_factor, seed):
-        random.seed(seed)
+        if seed is not None:
+            random.seed(seed)
 
         self.env = env
 
@@ -22,20 +23,12 @@ class TreasureAgent:
             if verbose == 1:
                 print("random action")
 
-            action = randint(0, self.env.action_space-1)
-            # print(self.env.agent_location, self.env.action_to_direction[action])
-            while not self.__check_inside(self.env.agent_location + self.env.action_to_direction[action]):
-                action = randint(0, self.env.action_space-1)
-            return action
+            return randint(0, self.env.action_space-1)
         else:
             if verbose == 1:
                 print("greedy action")
-                
-            row = self.q_values[obs].copy()
-            for action in range(self.env.action_space):
-                if not self.__check_inside(self.env.agent_location + self.env.action_to_direction[action]):
-                    row[action] = -1000
-            return int(np.argmax(row)) 
+
+            return int(np.argmax(self.q_values[obs]))
     
     def learn(self, obs, action, reward, terminated, next_obs):
         obs      = tuple(np.concatenate(list(obs.values())))
@@ -45,6 +38,3 @@ class TreasureAgent:
         target = reward + self.discount_factor*future_q_value
         temporal_difference = target - self.q_values[obs][action]
         self.q_values[obs][action] = self.q_values[obs][action] + self.learning_rate*temporal_difference
-
-    def __check_inside(self, location):
-        return (0 <= location[0] and location[0] < self.env.size and 0 <= location[1] and location[1] < self.env.size)
