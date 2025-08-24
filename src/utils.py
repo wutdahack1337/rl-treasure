@@ -10,12 +10,16 @@ def check_response(env, obs, reward):
 def check_q_values(env, agent):
     print("\n=== Q-values ===")
     for obs in sorted(agent.q_values):
+        if env.traps[obs[0]][obs[1]] == 1:
+            continue
         for i in range(env.size):
             for j in range(env.size):
                 if (i, j) == (obs[0], obs[1]):
                     print("[O]", end='')
                 elif (i, j) == (obs[2], obs[3]):
                     print("[X]", end='')
+                elif env.traps[i][j] == 1:
+                    print('[!]', end='')
                 else:
                     print("[ ]", end='')
             print()
@@ -32,7 +36,10 @@ def get_moving_average(arr, window, convolution_mode):
     """
     return np.convolve(np.array(arr).flatten(), np.ones(window), mode=convolution_mode)/window
 
-def plot_training_results(arr, size, n_episodes, rolling_length = 500):
+def plot_training_results(arr, size, n_episodes, debug, rolling_length = 500):
+    if debug:
+        rolling_length = 1
+
     if len(arr) <= rolling_length:
         raise ValueError("array length must be > rolling_length")
 

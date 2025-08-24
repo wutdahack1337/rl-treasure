@@ -16,6 +16,8 @@ class TrainingConfig:
 
     test_episodes: int = 3
 
+    debug: bool = False
+
     def __post_init__(self):
         if self.size < 2:
             raise ValueError("World size must be >= 2")
